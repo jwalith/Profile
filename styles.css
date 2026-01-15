@@ -545,6 +545,134 @@ img {
     color: var(--accent-gold);
 }
 
+/* Open Source Section */
+.open-source {
+    padding: var(--section-padding);
+    background: var(--bg-secondary);
+}
+
+.open-source-grid {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.open-source-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+.open-source-card:hover {
+    border-color: rgba(212, 175, 55, 0.3);
+    transform: translateY(-3px);
+}
+
+.open-source-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.open-source-title {
+    font-size: 1.4rem;
+    margin-bottom: 0.25rem;
+}
+
+.open-source-org {
+    color: var(--text-muted);
+}
+
+.open-source-link {
+    color: var(--accent-gold);
+    font-size: 0.9rem;
+    border-bottom: 1px solid transparent;
+}
+
+.open-source-link:hover {
+    border-bottom-color: var(--accent-gold);
+}
+
+.open-source-desc {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+}
+
+/* Recommendations Section */
+.recommendations {
+    padding: var(--section-padding);
+    background: var(--bg-primary);
+}
+
+.recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.recommendation-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 1.75rem;
+    transition: all 0.3s ease;
+}
+
+.recommendation-card:hover {
+    border-color: rgba(212, 175, 55, 0.3);
+    transform: translateY(-3px);
+}
+
+.recommendation-quote {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+}
+
+.recommendation-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.recommendation-person {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.recommendation-name {
+    font-family: var(--font-heading);
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.recommendation-title {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.recommendation-link {
+    color: var(--accent-gold);
+    font-size: 0.9rem;
+    border-bottom: 1px solid transparent;
+}
+
+.recommendation-link:hover {
+    border-bottom-color: var(--accent-gold);
+}
+
 /* Expandable Project Cards */
 .project-card-expandable {
     background: var(--bg-primary);
