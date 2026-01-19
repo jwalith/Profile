@@ -239,7 +239,162 @@ if (projectTabs.length && projectTabContents.length) {
     });
 }
 
+// Experience Rendering (Data-Driven)
+const experienceTimeline = document.getElementById('experience-timeline');
+
+async function loadExperienceData() {
+    if (!window.EXPERIENCE_SHEET_URL) {
+        return window.experienceData || [];
+    }
+
+    try {
+        const response = await fetch(window.EXPERIENCE_SHEET_URL);
+        if (!response.ok) {
+            throw new Error(`Sheet fetch failed: ${response.status}`);
+        }
+        const rows = await response.json();
+        return parseSheetRows(rows);
+    } catch (error) {
+        console.warn('Falling back to local experience data.', error);
+        return window.experienceData || [];
+    }
+}
+
+function parseSheetRows(rows) {
+    const roleMap = new Map();
+
+    rows.forEach(row => {
+        const roleId = (row.role_id || '').trim();
+        if (!roleId) return;
+
+        if (!roleMap.has(roleId)) {
+            roleMap.set(roleId, {
+                date: row.date || '',
+                title: row.title || '',
+                company: row.company || '',
+                projects: new Map()
+            });
+        }
+
+        const role = roleMap.get(roleId);
+        const projectName = (row.project_name || '').trim();
+        if (!projectName) return;
+
+        if (!role.projects.has(projectName)) {
+            role.projects.set(projectName, {
+                name: projectName,
+                tags: splitTags(row.project_tags),
+                mission: row.mission || '',
+                challenge: row.challenge || '',
+                solution: row.solution || '',
+                sections: parseSections(row.sections)
+            });
+        }
+    });
+
+    return Array.from(roleMap.values()).map(role => ({
+        ...role,
+        projects: Array.from(role.projects.values())
+    }));
+}
+
+function splitTags(tagsValue) {
+    if (!tagsValue) return [];
+    return tagsValue
+        .split('|')
+        .map(tag => tag.trim())
+        .filter(Boolean);
+}
+
+function parseSections(sectionsValue) {
+    if (!sectionsValue) return [];
+
+    return sectionsValue
+        .split('||')
+        .map(section => section.trim())
+        .filter(Boolean)
+        .map(section => {
+            const [title, ...textParts] = section.split(':');
+            return {
+                title: (title || '').trim(),
+                text: textParts.join(':').trim()
+            };
+        })
+        .filter(section => section.title && section.text);
+}
+
+async function renderExperience() {
+    if (!experienceTimeline) return;
+
+    const data = await loadExperienceData();
+    if (!data.length) return;
+
+    experienceTimeline.innerHTML = data.map(renderExperienceItem).join('');
+}
+
+function renderExperienceItem(item) {
+    const projectsHtml = (item.projects || []).map(renderProjectCard).join('');
+
+    return `
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <span class="timeline-date">${item.date}</span>
+            <h3 class="timeline-title">${item.title}</h3>
+            <p class="timeline-company">${item.company}</p>
+            ${projectsHtml}
+        </div>
+    `;
+}
+
+function renderProjectCard(project) {
+    const tagsHtml = (project.tags || [])
+        .map(tag => `<span class="tech-tag">${tag}</span>`)
+        .join('');
+
+    const sectionsHtml = (project.sections || [])
+        .map(section => `
+            <div class="project-content-item">
+                <h5>${section.title}</h5>
+                <p>${section.text}</p>
+            </div>
+        `)
+        .join('');
+
+    const detailsParts = [];
+    if (project.mission) {
+        detailsParts.push(`<p class="project-mission"><strong>The Mission:</strong> ${project.mission}</p>`);
+    }
+    if (project.challenge) {
+        detailsParts.push(`<p class="project-challenge"><strong>The Challenge:</strong> ${project.challenge}</p>`);
+    }
+    if (project.solution) {
+        detailsParts.push(`<p class="project-solution"><strong>The Solution:</strong> ${project.solution}</p>`);
+    }
+    if (sectionsHtml) {
+        detailsParts.push(`<div class="project-content-grid">${sectionsHtml}</div>`);
+    }
+
+    return `
+        <div class="project-card-expandable">
+            <div class="project-header-expandable" onclick="toggleProject(this)">
+                <div class="project-header-left">
+                    <h4 class="project-name">${project.name}</h4>
+                    <div class="tech-tags-inline">
+                        ${tagsHtml}
+                    </div>
+                </div>
+                <i class="fas fa-chevron-down expand-icon"></i>
+            </div>
+            <div class="project-details">
+                ${detailsParts.join('')}
+            </div>
+        </div>
+    `;
+}
+
 // Expandable Project Cards
 function toggleProject(element) {
     element.classList.toggle('expanded');
 }
+
+renderExperience();
