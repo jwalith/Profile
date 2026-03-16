@@ -249,6 +249,32 @@ img {
     gap: 1.5rem;
 }
 
+.hero-social-links {
+    display: flex;
+    gap: 1.2rem;
+    margin-top: 1.8rem;
+}
+
+.hero-social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.hero-social-link:hover {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(212, 175, 55, 0.15);
+}
+
 .hero-image-wrapper {
     position: relative;
     display: flex;
@@ -1244,6 +1270,10 @@ img {
     }
 
     .hero-cta-group {
+        justify-content: center;
+    }
+
+    .hero-social-links {
         justify-content: center;
     }
 
